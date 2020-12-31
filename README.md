@@ -1,4 +1,4 @@
-# Simple_expense_management
+# Simple_expense_management_tkinter_python
 - Function:
 Add: to store day, month, year, and amount of money.
 Display: to display all data.
