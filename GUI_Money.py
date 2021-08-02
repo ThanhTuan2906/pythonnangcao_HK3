@@ -21,6 +21,8 @@ class Money(Frame):
         # look up month in year
         self.lk_month = StringVar()
         self.lk_year = StringVar()
+        #statistics
+        self.stat = StringVar()
         # look up year
         self.look_year = StringVar()
         # Amount of money, note
@@ -88,15 +90,18 @@ class Money(Frame):
         lblYear = Label(left, bd = 2, padx = 2, pady = 2, bg = "powder blue", text = "YYYY",
                         font = ("arial", 10, "bold"))
         lblYear.place(x = 180, y = 0)
-        self.cbbYear = Combobox(left, font = ("arial", 10, "bold"), textvariable = self.year,
-                                width = 4)
-        self.cbbYear["value"] = tuple([""] + [str(i) for i in range(2018, 2031)])
-        self.cbbYear.current(0)
-        self.cbbYear.place(x = 225, y = 0)
+        
         #auto set time
         d = str(int(time.strftime("%d")))
         m = str(int(time.strftime("%m")))
         y = str(int(time.strftime("%Y")))
+        # ====
+        self.cbbYear = Combobox(left, font = ("arial", 10, "bold"), textvariable = self.year,
+                                width = 4)
+        self.cbbYear["value"] = tuple([""] + [str(i) for i in range(int(y) - 10, int(y) + 6)])
+        self.cbbYear.current(0)
+        self.cbbYear.place(x = 225, y = 0)
+        # ====
         self.day.set(d)
         self.month.set(m)
         self.year.set(y)
@@ -126,20 +131,27 @@ class Money(Frame):
         #lookup month in year
         self.cbb_year = Combobox(left, font = ("arial", 10, "bold"), state = "readonly",
                                   width = 4, textvariable = self.lk_year)
-        self.cbb_year["value"] = tuple([""] + [str(i) for i in range(2018, 2031)])
+        self.cbb_year["value"] = tuple([""] + [str(i) for i in range(int(y)-10, int(y)+6)])
         self.cbb_year.current(0)
         self.cbb_year.place(x = 150, y = 90)
         
         self.btnMonth = Button(left, font = ("arial", 10, "bold"), text = "Lookup", bd = 2,
                                padx = 2, pady = 2, bg = "cadet blue", command = self.lookup_month)
         self.btnMonth.place(x = 210, y = 86)
-        # lookup year
+        # lookup year and statistics per month in year
         lup_year = Label(left, bd =2, padx = 2, pady = 2, text = "Lookup Year",
                           bg = "powder blue", font = ("arial", 10, "bold"))
         lup_year.place(x = 0, y = 120)
+        # is Statistics or None
+        self.cbb_stat = Combobox(left, font = ("arial", 10, "bold"), state = "readonly",
+                                 width = 5, textvariable = self.stat)
+        self.cbb_stat["value"] = tuple(["", "Stat", "None"])
+        self.cbb_stat.current(0)
+        self.cbb_stat.place(x=90, y = 120)
+        # cbb year
         self.cbb_year1 = Combobox(left, font = ("arial", 10, "bold"), state = "readonly",
                                   width = 4, textvariable = self.look_year)
-        self.cbb_year1["value"] = tuple([""] + [str(i) for i in range(2018, 2031)])
+        self.cbb_year1["value"] = tuple([""] + [str(i) for i in range(int(y)-10, int(y)+6)])
         self.cbb_year1.current(0)
         self.cbb_year1.place(x = 150, y = 120)
         
@@ -312,6 +324,7 @@ class Money(Frame):
         self.year.set("")
         self.lk_month.set("")
         self.lk_year.set("")
+        self.stat.set("")
         self.look_year.set("")
         self.resetDay()
 
@@ -379,11 +392,13 @@ class Money(Frame):
             self.txt_display.insert(END, "The amount used in %s-%s\n is %s vnd." % (self.lk_month.get(),
                                                                             self.lk_year.get(), result))
     def lookup_year(self):
-        if len(self.look_year.get()) != 0:
+        if len(self.look_year.get()) != 0 and self.stat.get() != 'Stat':
             result = Database_Money.lookup_year(self.look_year.get())
             self.txt_display.delete("1.0", END)
             self.txt_display.insert(END, "The amount used \
 in %s is\n %s vnd." %(self.look_year.get(),result))
+        else:
+            Database_Money.plotting(self.look_year.get())
 
     def lookup_week(self):
         result = Database_Money.lookup_week()
