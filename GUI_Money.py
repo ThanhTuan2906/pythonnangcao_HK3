@@ -217,6 +217,7 @@ class Money(Frame):
         style.theme_use("winnative")
         style.configure("Treeview.Heading", font=('arial', 10, "bold"))
         style.configure("Treeview.Heading", background="beige")
+        style.configure("Treeview", font=('arial', 10, "bold"))
         
         """ Create a simple calculator """
         self.entry_input = Entry(cal, font = ("arial", 15, "bold"), width = 20, textvariable = self.val,
