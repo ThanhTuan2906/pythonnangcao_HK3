@@ -465,7 +465,7 @@ dat-e, month and year are true fo-r the current week for the pa-st week.\n")
 if __name__ == "__main__":
     root = Tk()
     root.resizable(width = False, height = False) # Not expand
-    root.geometry("800x600+350+100")
+    root.geometry("800x640+350+100")
     GUI = Money(root)
     root.mainloop()
 
