@@ -35,13 +35,33 @@ def deleteRec(id):
     con.commit()
     con.close()
 
-def searchData(day = "", month = "", year = "", money = ""):
+def searchData(day = "", month = "", year = ""):
     con = sqlite3.connect("data_GUI.db")
     cur = con.cursor()
-    cur.execute("SELECT * FROM data_GUI WHERE day = ? AND month = ? AND year = ?\
-OR money = ?", (day, month, year, money))
-    # if you want to find particular day or month or year
-    #cur.execute("SELECT * FROM data_GUI WHERE day = ? OR month = ? OR year = ? OR money = ?", (day, month, year, money))
+    query = "SELECT * FROM dadata_GUI"
+    if day != "" and month == "" and year == "":
+        query += " WHERE day=?"
+        cur.execute(query, (day, ))
+    elif day == "" and month != "" and year == "":
+        query += " WHERE month=?"
+        cur.execute(query, (month, ))
+    elif day == "" and month == "" and year != "":
+        query += " WHERE year=?"
+        cur.execute(query, (year, ))
+    elif day != "" and month != "" and year == "":
+        query += " WHERE day=? AND month=?"
+        cur.execute(query, (day, month, ))
+    elif day == "" and month != "" and year != "":
+        query += " WHERE month=? AND year=?"
+        cur.execute(query, (month, year, ))
+    elif day != "" and month == "" and year != "":
+        query += " WHERE day=? AND year=?"
+        cur.execute(query, (day, year, ))
+    elif day != "" and month != "" and year != "":
+        query += " WHERE day=? AND month=? AND year=?"
+        cur.execute(query, (day, month, year, ))
+    
+
     rows = cur.fetchall()
     con.close()
     return rows
