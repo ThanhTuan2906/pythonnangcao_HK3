@@ -1,11 +1,12 @@
 """ The program stores the amount spent each day """
 
 from tkinter import *
-from tkinter.ttk import Combobox
+from tkinter.ttk import Combobox, Style, Treeview
 import time
 import calendar
 import tkinter.messagebox as mess
 import Database_Money
+from tkcalendar import Calendar as CAL
 
 class Money(Frame):
     def __init__(self, frame):
@@ -31,6 +32,8 @@ class Money(Frame):
         # simple calculator with addition, subtraction, multiplication, division
         self.operator = ""
         self.val = StringVar()
+        self.english_month = ['January', "Feburary", 'March', 'April', 'May', 'June', 'Jully', 'August', 'September', 'October', 'November', 'December']
+        
         """ ----------------------------------------------Main Frame------------------------------------------"""
         MainFrame = Frame(self.frame, width = 800, height = 600, bg = "sea green", bd = 10,
                           relief = RIDGE)
@@ -38,7 +41,7 @@ class Money(Frame):
         """ -----------------------------------------------Sub Frame--------------------------------------------"""
         # frame contains the name
         titleF = Frame(MainFrame, width = 800, height = 50, bg = "light sea green",
-                       bd = 5, padx = 2, pady = 2, relief = RIDGE)
+                       padx = 2, pady = 10, relief = RIDGE)
         titleF.pack(side = TOP)
         # frame contains buttons
         buttonF = Frame(MainFrame, width = 800, height = 50, bg = "gold", bd = 5,
@@ -183,13 +186,38 @@ class Money(Frame):
         
         """ Listbox contains date information, amount of money, notes"""
         # scrollbar
-        scrollbar = Scrollbar(detailF)
-        scrollbar.grid(row = 0, column = 1, sticky = "ns")
-        self.listbox = Listbox(detailF, font = ("arial", 12, "bold"), width = 82,
-                               yscrollcommand = scrollbar.set, bd = 3)
-        self.listbox.bind("<<ListboxSelect>>", self.selected)
-        self.listbox.grid(row = 0, column = 0)
-        scrollbar.config(command = self.listbox.yview)
+        scrollbary = Scrollbar(DetailF, orient='vertical')
+        scrollbarx = Scrollbar(DetailF, orient='horizontal')
+        columns = ("id", 'day', 'month', 'year', "money", "note")
+        self.treeview = Treeview(DetailF, columns = columns, show='headings')
+        scrollbarx.pack(side=BOTTOM, fill=X)
+        scrollbary.pack(side = RIGHT, fill=Y)
+        self.treeview.pack(side = LEFT, expand=True, fill=BOTH)
+        scrollbary.config(command = self.treeview.yview)
+        scrollbarx.config(command = self.treeview.xview)
+        self.treeview.config(xscrollcommand=scrollbarx.set, yscrollcommand=scrollbary.set)
+        self.treeview.bind('<<TreeviewSelect>>', self.selected)
+        #Headings
+        self.treeview.heading("id", text = "#", anchor=CENTER)
+        self.treeview.heading("day", text = "Day", anchor=CENTER)
+        self.treeview.heading("month", text = "Month", anchor=CENTER)
+        self.treeview.heading("year", text= "Year", anchor=CENTER)
+        self.treeview.heading("money", text="How much", anchor=CENTER)
+        self.treeview.heading("note", text = "Note", anchor=CENTER)
+
+        # Define the columns
+        self.treeview.column("id", width = 80)
+        self.treeview.column("day", anchor=CENTER, width=55)
+        self.treeview.column("month", anchor=CENTER, width=55)
+        self.treeview.column("year", anchor=CENTER, width=55)
+        self.treeview.column("money", anchor=CENTER, width=150)
+        self.treeview.column("note", anchor=CENTER, width=350, stretch=True)
+
+        style = Style()
+        style.theme_use("winnative")
+        style.configure("Treeview.Heading", font=('arial', 10, "bold"))
+        style.configure("Treeview.Heading", background="beige")
+        
         """ Create a simple calculator """
         self.entry_input = Entry(cal, font = ("arial", 15, "bold"), width = 20, textvariable = self.val,
                                  justify = RIGHT, bd = 6)
@@ -288,11 +316,28 @@ class Money(Frame):
         self.month.set(str(int(time.strftime("%m"))))
         self.year.set(str(int(time.strftime("%Y"))))
     
+    def clearTreeView(self):
+        for i in self.treeview.get_children():
+            self.treeview.delete(i)
+            
     def showCalen(self):
         m = int(time.strftime("%m"))
         y = int(time.strftime("%Y"))
         self.txt_display.delete("1.0", END)
         self.txt_display.insert(END, str(calendar.month(y, m)))
+        
+    def showCalendar(self):
+        self.new_gui = Tk()
+        self.new_gui.config(background="white")
+        self.new_gui.title("CALENDAR")
+        self.new_gui.geometry("280x200+800+100")
+        d = int(time.strftime("%d"))
+        m = int(time.strftime("%m"))
+        y = int(time.strftime("%Y"))
+        cal = CAL(self.new_gui, selectmode='day', year=y, month=m, day=d)
+        cal.grid(row = 1, column=1, padx=20)
+        self.new_gui.mainloop()
+        
     """ Function Calculator """
     def onClick(self, e):
         global operator
@@ -315,7 +360,7 @@ class Money(Frame):
 
     """ Function ADD, DISPLAY, .... EXIT """
     def Clean(self):
-        self.listbox.delete(0, END)
+        self.clearTreeView()
         self.txtMoney.delete(0, END)
         self.txtNote.delete(0, END)
         self.txt_display.delete("1.0", END)
@@ -337,23 +382,25 @@ class Money(Frame):
     def addData(self):
         if len(self.money.get()) != 0:
             if self.money.get().isdigit():
-                Database_Money.addIdRec(self.day.get(), self.month.get(), self.year.get(),
+                id = Database_Money.addIdRec(self.day.get(), self.month.get(), self.year.get(),
                                         self.money.get(), self.note.get())
-                self.listbox.delete(0, END)
-                self.listbox.insert(END, self.day.get(), self.month.get(), self.year.get(),
-                                    self.money.get(), self.year.get())
+                self.clearTreeView()
+                row = (id, self.day.get(), self.month.get(), self.year.get(),
+                                    self.money.get(), self.note.get())
+                self.treeview.insert(parent='', index='end', iid=row[0], values = row)
             else:
                 #self.Clean()
                 mess.showwarning("Warning", "You must enter the number!")
+                
         
     def displayData(self):
-        self.listbox.delete(0, END)
+        self.clearTreeView()
         for row in Database_Money.viewData():
-            self.listbox.insert(END, row)
+            self.treeview.insert(parent = '', index='end', iid = row[0],values = row)
     # Select data specified
     def selected(self, event):
         global s
-        s = self.listbox.get(self.listbox.curselection()[0])
+        s = self.treeview.item(self.treeview.selection())['values']
         self.day.set(s[1])
         self.month.set(s[2])
         self.year.set(s[3])
@@ -365,20 +412,22 @@ class Money(Frame):
     def deleteData(self):
         if len(self.money.get()) != 0:
             Database_Money.deleteRec(s[0])
-            self.Clean()
-            self.displayData()
+            mess.showinfo("Message", "A record with ID = %s was deleted successfully." %s[0])
+            self.clearTreeView()
     # select data specified --> update
     def updateData(self):
         if len(self.money.get()) != 0:
             Database_Money.updateData(s[0], self.day.get(), self.month.get(), self.year.get(),
                                       self.money.get(), self.note.get())
-            self.listbox.delete(0, END)
+            mess.showinfo("Message", "A record with ID = %s was updated successfully." %s[0])
+            self.clearTreeView()
+            
     # Seach money in day, month and year
     def searchData(self):
-        self.listbox.delete(0, END)
-        for row in Database_Money.searchData(self.day.get(), self.month.get(), self.year.get(),
-                                             self.money.get()):
-            self.listbox.insert(END, row)
+        self.clearTreeView()
+        rows = Database_Money.searchData(day = str(self.day.get()), month=str(self.month.get()), year=str(self.year.get()))
+        for row in rows:
+            self.treeview.insert(parent = '', index='end', iid = row[0],values = row)
     """ FUNCTION TOTAL and lookup month, year, week """
     def totalAll(self):
         result, count = Database_Money.total()
