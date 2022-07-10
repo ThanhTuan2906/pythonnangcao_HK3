@@ -39,7 +39,7 @@ def deleteRec(id):
 def searchData(day = "", month = "", year = ""):
     con = sqlite3.connect("data_GUI.db")
     cur = con.cursor()
-    query = "SELECT * FROM dadata_GUI"
+    query = "SELECT * FROM data_GUI"
     if day != "" and month == "" and year == "":
         query += " WHERE day=?"
         cur.execute(query, (day, ))
