@@ -19,6 +19,7 @@ def addIdRec(day, month, year, money, note):
                 (day, month, year, money, note))
     con.commit()
     con.close()
+    return cur.lastrowid
 
 def viewData():
     con = sqlite3.connect("data_GUI.db")
