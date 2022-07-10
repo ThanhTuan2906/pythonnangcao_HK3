@@ -35,12 +35,12 @@ class Money(Frame):
         self.english_month = ['January', "Feburary", 'March', 'April', 'May', 'June', 'Jully', 'August', 'September', 'October', 'November', 'December']
         
         """ ----------------------------------------------Main Frame------------------------------------------"""
-        MainFrame = Frame(self.frame, width = 800, height = 600, bg = "sea green", bd = 10,
+        MainFrame = Frame(self.frame, width = 800, height = 600, bg = "#5cb85c", bd = 10,
                           relief = RIDGE)
         MainFrame.pack()
         """ -----------------------------------------------Sub Frame--------------------------------------------"""
         # frame contains the name
-        titleF = Frame(MainFrame, width = 800, height = 50, bg = "light sea green",
+        titleF = Frame(MainFrame, width = 800, height = 50, bg = "#5cb85c",
                        padx = 2, pady = 10, relief = RIDGE)
         titleF.pack(side = TOP)
         # frame contains buttons
@@ -69,7 +69,7 @@ class Money(Frame):
         right.pack(side = RIGHT)
         
         lblTitle = Label(titleF, text = "Expense Management", justify = CENTER, bd = 2, padx = 2, pady = 2,
-                         font = ("arial", 28, "bold"), bg = "light sea green")
+                         font = ("arial", 28, "bold"), bg = "#5cb85c")
         lblTitle.pack()
         """ Label and Combobox in frame left """
         lblDay = Label(left, bd = 2, padx = 2, pady = 2, bg = "powder blue", text = "DD",
@@ -186,8 +186,8 @@ class Money(Frame):
         
         """ Listbox contains date information, amount of money, notes"""
         # scrollbar
-        scrollbary = Scrollbar(DetailF, orient='vertical')
-        scrollbarx = Scrollbar(DetailF, orient='horizontal')
+        scrollbary = Scrollbar(detailF, orient='vertical')
+        scrollbarx = Scrollbar(detailF, orient='horizontal')
         columns = ("id", 'day', 'month', 'year', "money", "note")
         self.treeview = Treeview(DetailF, columns = columns, show='headings')
         scrollbarx.pack(side=BOTTOM, fill=X)
@@ -290,25 +290,25 @@ class Money(Frame):
         self.btnDiv.grid(row = 5, column = 3)
         """ BUTTON add delete, display, search, update, clean, exit"""
         self.btnAdd = Button(buttonF, bd = 2, padx = 2, pady = 2, font = ("arial", 12, "bold"),
-                             text = "Add", bg = "red", width = 10, command = self.addData)
+                             text = "Add", bg = "#0275d8", width = 10, command = self.addData)
         self.btnAdd.grid(row = 0, column = 0)
         self.btnDisplay = Button(buttonF, bd = 2, padx = 2, pady = 2, font = ("arial", 12, "bold"),
-                             text = "Display", bg = "yellow", width = 10, command = self.displayData)
+                             text = "Display", bg = "#5cb85c", width = 10, command = self.displayData)
         self.btnDisplay.grid(row = 0, column = 1)
         self.btnDelete = Button(buttonF, bd = 2, padx = 2, pady = 2, font = ("arial", 12, "bold"),
-                             text = "Delete", bg = "green", width = 10, command = self.deleteData)
+                             text = "Delete", bg = "#d9534f", width = 10, command = self.deleteData)
         self.btnDelete.grid(row = 0, column = 2)
         self.btnSearch = Button(buttonF, bd = 2, padx = 2, pady = 2, font = ("arial", 12, "bold"),
-                             text = "Seach", bg = "blue", width = 10, command = self.searchData)
+                             text = "Seach", bg = "#9054ac", width = 10, command = self.searchData)
         self.btnSearch.grid(row = 0, column = 3)
         self.btnUpdate = Button(buttonF, bd = 2, padx = 2, pady = 2, font = ("arial", 12, "bold"),
-                             text = "Update", bg = "pink", width = 10, command = self.updateData)
+                             text = "Update", bg = "#f0ad4e", width = 10, command = self.updateData)
         self.btnUpdate.grid(row = 0, column = 4)
         self.btnClean = Button(buttonF, bd = 2, padx = 2, pady = 2, font = ("arial", 12, "bold"),
-                             text = "Clean", bg = "purple", width = 10, command = self.Clean)
+                             text = "Clean", bg = "#f0ad4e", width = 10, command = self.Clean)
         self.btnClean.grid(row = 0, column = 5)
         self.btnExit = Button(buttonF, bd = 2, padx = 2, pady = 2, font = ("arial", 12, "bold"),
-                             text = "Exit", bg = "cyan", width = 8, command = self.exit)
+                             text = "Exit", bg = "#f7f7f7", width = 8, command = self.exit)
         self.btnExit.grid(row = 0, column = 6)
 
     # function
