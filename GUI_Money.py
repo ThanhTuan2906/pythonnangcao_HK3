@@ -189,7 +189,7 @@ class Money(Frame):
         scrollbary = Scrollbar(detailF, orient='vertical')
         scrollbarx = Scrollbar(detailF, orient='horizontal')
         columns = ("id", 'day', 'month', 'year', "money", "note")
-        self.treeview = Treeview(DetailF, columns = columns, show='headings')
+        self.treeview = Treeview(detailF, columns = columns, show='headings')
         scrollbarx.pack(side=BOTTOM, fill=X)
         scrollbary.pack(side = RIGHT, fill=Y)
         self.treeview.pack(side = LEFT, expand=True, fill=BOTH)
@@ -305,7 +305,7 @@ class Money(Frame):
                              text = "Update", bg = "#f0ad4e", width = 10, command = self.updateData)
         self.btnUpdate.grid(row = 0, column = 4)
         self.btnClean = Button(buttonF, bd = 2, padx = 2, pady = 2, font = ("arial", 12, "bold"),
-                             text = "Clean", bg = "#f0ad4e", width = 10, command = self.Clean)
+                             text = "Clean", bg = "aqua", width = 10, command = self.Clean)
         self.btnClean.grid(row = 0, column = 5)
         self.btnExit = Button(buttonF, bd = 2, padx = 2, pady = 2, font = ("arial", 12, "bold"),
                              text = "Exit", bg = "#f7f7f7", width = 8, command = self.exit)
